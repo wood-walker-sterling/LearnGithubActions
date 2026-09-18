@@ -1,0 +1,30 @@
+name: FuncHttpBasic Build
+
+on:
+  push:
+    paths:
+      - '.github/workflows/funchttp-build.yml'
+      - 'FuncHttpBasic/**'
+  workflow_dispatch: # manual trigger
+
+jobs:
+  build:
+    name: Build-FuncHttpBasic
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        working-directory: FuncHttpBasic
+        run: dotnet restore FuncHttpBasic.csproj
+
+      - name: Build function app
+        working-directory: FuncHttpBasic
+        run: dotnet build FuncHttpBasic.csproj --configuration Release --no-restore
